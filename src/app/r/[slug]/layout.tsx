@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation'
 import React from 'react'
 import { format } from 'date-fns'
 import SubscribeLeaveToggle from '@/components/SubscribeLeaveToggle'
+import Link from 'next/link'
+import { buttonVariants } from '@/components/ui/button'
 interface userIdType {
 
     id: string;
@@ -16,7 +18,7 @@ interface userIdType {
 const Layout = async ({ children, params: { slug } }: { children: React.ReactNode, params: { slug: string } }) => {
     const session = await getServerSession()
 
-    console.log(session)
+
     const subreddit = await db.subreddit.findUnique({
         where: {
             name: slug
@@ -41,9 +43,6 @@ const Layout = async ({ children, params: { slug } }: { children: React.ReactNod
         });
 
     }
-
-
-
     const subscription = !session?.user ? undefined : await db.subcription.findFirst({
         where: {
             subreddit: {
@@ -66,12 +65,11 @@ const Layout = async ({ children, params: { slug } }: { children: React.ReactNod
             }
         }
     })
-    console.log(subreddit.creatorId)
-    console.log(userId?.id)
+
     return (
-        <div className='max-w-7xl gap-6 flex w-full '>
+        <div className='max-w-7xl gap-6 flex w-full'>
             <div className='w-full'>{children}</div>
-            <div className='w-2/6 bg-slate-100 rounded-xl h-fit '>
+            <div className='w-2/6 bg-slate-100 rounded-xl h-fit px-5 '>
                 <div className='text-xl bg-neutral-100 rounded-t-xl w-full p-5'>
                     About r/{subreddit.name}
                 </div>
@@ -93,18 +91,29 @@ const Layout = async ({ children, params: { slug } }: { children: React.ReactNod
                         {memeberCount}
                     </span>
                 </div>
-                {subreddit.creatorId === userId?.id ? (
-                    <div className=' bg-neutral-100 flex  w-full p-5'>
-                        You created this community
-                    </div>
+                <div>
 
-                ) : null}
 
-                {
-                    subreddit.creatorId !== userId?.id ? (
-                        <SubscribeLeaveToggle isSubscribed={isSubscribed} subredditId={subreddit.id} subredditName={subreddit.name} />
-                    ) : null
-                }
+                    {subreddit.creatorId === userId?.id ? (
+                        <div className=' bg-neutral-100 flex  w-full p-5'>
+                            You created this community
+                        </div>
+
+                    ) : null}
+
+                    {
+                        subreddit.creatorId !== userId?.id ? (
+                            <SubscribeLeaveToggle isSubscribed={isSubscribed} subredditId={subreddit.id} subredditName={subreddit.name} />
+                        ) : null
+                    }
+                </div>
+                <div>
+                    <Link href={`${subreddit.name}/submit`} className={buttonVariants({
+                        className: "w-full mb-6 bg-white rounded-xl "
+                    })}>
+                        Create Post
+                    </Link>
+                </div>
             </div>
         </div>
     )

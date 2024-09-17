@@ -82,10 +82,10 @@ const SubscribeLeaveToggle = ({ isSubscribed, subredditId, subredditName }: { is
         <div className='flex justify-center'>
             {
                 isSubscribed ? (
-                    <Button onClick={() => unsubscribe()} className='w-5/6 mt-1 mb-4 bg-white rounded-xl'>
+                    <Button onClick={() => unsubscribe()} className='w-full mt-1 mb-4 bg-white rounded-xl'>
                         {subPending ? (<div> Loading.. </div>) : (<p>Leave Community</p>)}</Button >
                 ) : (
-                    <Button onClick={() => subscribe()} className='w-5/6 mt-1 mb-4 bg-white rounded-xl'>
+                    <Button onClick={() => subscribe()} className='w-full mt-1 mb-4 bg-white rounded-xl'>
                         {subPending ? (<div> Loading.. </div>) : (<p>Join Community</p>)}
                     </Button>
                 )}
